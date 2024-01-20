@@ -1,27 +1,24 @@
-#ARG VARIANT=3-bullseye
-#FROM mcr.microsoft.com/vscode/devcontainers/python:${VARIANT}
-#FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+ARG VARIANT=3-bullseye
+FROM mcr.microsoft.com/vscode/devcontainers/python:${VARIANT}
 
-#ENV PYTHONUNBUFFERED 1
+
+ENV PYTHONUNBUFFERED 1
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
-# ARG NODE_VERSION="none"
-# RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+ ARG NODE_VERSION="none"
+ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
-# RUN apt update && apt install -y mariadb-client
+ RUN apt update && apt install -y mariadb-client
 
 # [Optional] If your requirements rarely change, uncomment this section to add them to the image.
-# COPY requirements.txt /tmp/pip-tmp/
-# RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
-#  && rm -rf /tmp/pip-tmp
+ COPY requirements.txt /tmp/pip-tmp/
+ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+  && rm -rf /tmp/pip-tmp
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+#    && apt-get -y install --no-install-recommends <your-package-list-here>
 
-FROM ubuntu:22.04
-LABEL maintainer="Swift Infrastructure <swift-infrastructure@forums.swift.org>"
-LABEL description="Docker Container for the Swift programming language"
 
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && apt-get -q update && \
     apt-get -q install -y \
@@ -94,4 +91,4 @@ RUN set -e; \
 RUN swift --version
 
 # Install Maria
-RUN apt update && apt install -y mariadb-client
+#RUN apt update && apt install -y mariadb-client
