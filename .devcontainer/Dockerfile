@@ -1,38 +1,58 @@
-ARG VARIANT=3-bullseye
-FROM mcr.microsoft.com/vscode/devcontainers/python:${VARIANT}
+
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 
-ENV PYTHONUNBUFFERED 1
+# ENV PYTHONUNBUFFERED 1
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
- ARG NODE_VERSION="none"
- RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+# ARG NODE_VERSION="none"
+# RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
  RUN apt update && apt install -y mariadb-client
 
 # [Optional] If your requirements rarely change, uncomment this section to add them to the image.
- COPY requirements.txt /tmp/pip-tmp/
- RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
-  && rm -rf /tmp/pip-tmp
+# COPY requirements.txt /tmp/pip-tmp/
+# RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+#  && rm -rf /tmp/pip-tmp
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #    && apt-get -y install --no-install-recommends <your-package-list-here>
 
+
+
 # New Code Below for Swift
 
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && apt-get -q update && \
-    apt-get -q install -y binutils git gnupg2 libc6-dev libcurl4 \
-    libedit2 libgcc-9-dev libpython2.7 libsqlite3-0 libstdc++-9-dev \
-    libxml2 libz3-dev pkg-config tzdata zlib1g-dev wget libc6
-    #apt-get -q install -y \
+    apt-get -q install -y \
+    binutils \
+    git \
+    unzip \
+    gnupg2 \
+    libc6-dev \
+    libcurl4-openssl-dev \
+    libedit2 \
+    libgcc-11-dev \
+    libpython3-dev \
+    libsqlite3-0 \
+    libstdc++-11-dev \
+    libxml2-dev \
+    libz3-dev \
+    pkg-config \
+    python3-lldb-13 \
+    tzdata \
+    zlib1g-dev \
+    && rm -r /var/lib/apt/lists/*
 
-# wget https://download.swift.org/swift-5.5.1-release/ubuntu2004/swift-5.5.1-RELEASE/swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
+# Everything up to here should cache nicely between Swift versions, assuming dev dependencies change little
 
+# pub   4096R/ED3D1561 2019-03-22 [SC] [expires: 2023-03-23]
+#       Key fingerprint = A62A E125 BBBF BB96 A6E0  42EC 925C C1CC ED3D 1561
+# uid                  Swift 5.x Release Signing Key <swift-infrastructure@swift.org
 ARG SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
 ARG SWIFT_PLATFORM=ubuntu22.04
-ARG SWIFT_BRANCH=swift-5.8.1-release
-ARG SWIFT_VERSION=swift-5.8.1-RELEASE
+ARG SWIFT_BRANCH=swift-5.9.2-release
+ARG SWIFT_VERSION=swift-5.9.2-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 
 ENV SWIFT_SIGNING_KEY=$SWIFT_SIGNING_KEY \
@@ -58,7 +78,7 @@ RUN set -e; \
     && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
     # - Grab curl here so we cache better up above
     && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -q update && apt-get -q install -y curl \
+    && apt-get -q update && apt-get -q install -y curl && rm -rf /var/lib/apt/lists/* \
     # - Download the GPG keys, Swift toolchain, and toolchain signature, and verify.
     && export GNUPGHOME="$(mktemp -d)" \
     && curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig \
@@ -68,4 +88,7 @@ RUN set -e; \
     && tar -xzf swift.tar.gz --directory / --strip-components=1 \
     && chmod -R o+r /usr/lib/swift \
     && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
-    && apt-get purge --
+    && apt-get purge --auto-remove -y curl
+
+# Print Installed Swift Version
+RUN swift --version
