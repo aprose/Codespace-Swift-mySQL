@@ -5,10 +5,7 @@ services:
     build:
       context: ..
       dockerfile: swift:5.9.2
-
-    volumes:
-      - ..:/workspace:cached  
-
+ 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
@@ -23,17 +20,3 @@ services:
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
-
-  db:
-    image: mariadb:latest
-    restart: unless-stopped
-    volumes:
-      - mariadb-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: mariadb
-      MYSQL_DATABASE: mariadb
-      MYSQL_USER: mariadb
-      MYSQL_PASSWORD: mariadb
-
-volumes:
-  mariadb-data:
