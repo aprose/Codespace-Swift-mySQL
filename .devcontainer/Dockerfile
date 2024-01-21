@@ -1,6 +1,6 @@
 
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
-
+#FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+FROM mcr.microsoft.com/devcontainers/universal:2.7.1-linux
 
 # ENV PYTHONUNBUFFERED 1
 
