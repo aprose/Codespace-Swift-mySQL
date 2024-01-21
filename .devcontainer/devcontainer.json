@@ -1,8 +1,15 @@
 // Update the VARIANT arg in docker-compose.yml to pick a Python version
 {
 	"dockerComposeFile": "docker-compose.yml",
+	"features" : {
+		 "ghcr.io/devcontainers/features/anaconda:1": {} ,
+		"ghcr.io/devcontainers/features/python:1": {},
+		"ghcr.io/nikitakurpas/features/vapor-toolbox:1": {},
+		"ghcr.io/raucha/devcontainer-features/pytorch:1": {}
+	},
 	"service": "devcontainer",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "postCreateCommand": "sudo sh .devcontainer/startup.sh",
-  "remoteUser": "vscode"
+  	"postCreateCommand": "sudo sh .devcontainer/startup.sh",
+  	"remoteUser": "vscode"
+		
 }
