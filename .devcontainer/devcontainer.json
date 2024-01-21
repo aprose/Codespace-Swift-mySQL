@@ -2,10 +2,8 @@
 {
 	"dockerComposeFile": "docker-compose.yml",
 	"features" : {
-		 "ghcr.io/devcontainers/features/anaconda:1": {} ,
 		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/nikitakurpas/features/vapor-toolbox:1": {},
-		"ghcr.io/raucha/devcontainer-features/pytorch:1": {}
+		"ghcr.io/nikitakurpas/features/vapor-toolbox:1": {}
 	},
 	"service": "devcontainer",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
