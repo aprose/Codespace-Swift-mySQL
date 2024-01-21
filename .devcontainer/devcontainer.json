@@ -2,5 +2,7 @@
 {
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "devcontainer",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "sudo sh .devcontainer/startup.sh",
+  "remoteUser": "vscode"
 }
