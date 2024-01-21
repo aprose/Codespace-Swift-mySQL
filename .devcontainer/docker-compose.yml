@@ -21,4 +21,4 @@ services:
       MYSQL_PASSWORD: mariadb
 
 volumes:
-  postgres-data:
+  mariadb-data:
